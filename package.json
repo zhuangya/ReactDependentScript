@@ -20,9 +20,9 @@
     "react": "16.x"
   },
   "devDependencies": {
-    "nwb": "0.19.x",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
+    "nwb": "^0.22.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
     "react-stripe-elements": "^1.2.0"
   },
   "author": "Shane O'Sullivan",
