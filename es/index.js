@@ -6,6 +6,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 
+// Globally track the nodes previously inserted so each is only inserted once
+var scriptUrls = {};
+var sheetUrls = {};
+
 var ReactDependentScript = function (_Component) {
   _inherits(ReactDependentScript, _Component);
 
@@ -15,7 +19,6 @@ var ReactDependentScript = function (_Component) {
     var _this = _possibleConstructorReturn(this, _Component.call(this));
 
     _this._handleLoad = function () {
-      console.log('_handleLoad', _this.state.loadingCount, 'remaining');
       _this.setState({ loadingCount: _this.state.loadingCount - 1 });
     };
 
@@ -29,41 +32,39 @@ var ReactDependentScript = function (_Component) {
     var scripts = this.props.scripts;
     var stylesheets = this.props.stylesheets;
 
-    // Load the stylesheets first
+    // Load the stylesheets first, but don't wait for them to complete, as
+    // nothing will break.
     if (stylesheets && stylesheets.length > 0) {
-      var unloadedSheets = stylesheets.filter(function (sheet) {
-        return !document.body.querySelector('link[data-href=\'' + sheet + '\']');
-      });
-
-      unloadedSheets.forEach(function (sheet) {
-        var sheetNode = document.createElement('link');
-        sheetNode.setAttribute('rel', 'stylesheet');
-        sheetNode.setAttribute('href', sheet);
-        sheetNode.setAttribute('data-href', sheet);
-        document.body.appendChild(sheetNode);
+      stylesheets.forEach(function (sheet) {
+        if (!sheetUrls[sheet]) {
+          var sheetNode = document.createElement('link');
+          sheetNode.setAttribute('rel', 'stylesheet');
+          sheetNode.setAttribute('href', sheet);
+          document.body.appendChild(sheetNode);
+        }
+        sheetUrls[sheet] = 1;
       });
     }
 
     // Look for the script in the body. If not there, inject it.
     if (scripts && scripts.length > 0) {
       var unloadedScripts = scripts.filter(function (script) {
-        return !document.body.querySelector('script[data-src=\'' + script + '\']');
+        return !scriptUrls[script];
       });
 
       this.setState({ loadingCount: unloadedScripts.length }, function () {
         unloadedScripts.forEach(function (script) {
+          // if (!scriptUrls[script])
+          scriptUrls[script] = 1;
           var scriptNode = document.createElement('script');
           scriptNode.type = 'text/javascript';
           scriptNode.src = script;
-          scriptNode.setAttribute('data-src', script);
           scriptNode.addEventListener('load', _this2._handleLoad);
           document.body.appendChild(scriptNode);
         });
       });
     }
   };
-  //
-
 
   ReactDependentScript.prototype.render = function render() {
     if (this.state.loadingCount === 0) {
