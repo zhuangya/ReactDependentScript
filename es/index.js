@@ -19,12 +19,10 @@ var ReactDependentScript = function (_Component) {
     var _this = _possibleConstructorReturn(this, _Component.call(this));
 
     _this._handleLoad = function () {
-      console.log(_this.state.mounted);
       _this.state.mounted && _this.setState({ loadingCount: _this.state.loadingCount - 1 });
     };
 
     _this.state = { loadingCount: 0, mounted: false };
-    console.log('hello', _this.state);
     return _this;
   }
 
