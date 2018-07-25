@@ -8,7 +8,6 @@ export default class ReactDependentScript extends Component {
   constructor() {
     super();
     this.state = { loadingCount: 0, mounted: false };
-    console.log('hello', this.state);
   }
 
   componentDidMount() {
@@ -69,7 +68,6 @@ export default class ReactDependentScript extends Component {
   }
 
   _handleLoad = () => {
-    console.log(this.state.mounted);
     this.state.mounted && this.setState({ loadingCount: this.state.loadingCount - 1 });
   };
 }
