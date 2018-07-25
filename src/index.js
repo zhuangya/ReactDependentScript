@@ -7,10 +7,13 @@ let sheetUrls = {};
 export default class ReactDependentScript extends Component {
   constructor() {
     super();
-    this.state = { loadingCount: 0 };
+    this.state = { loadingCount: 0, mounted: false };
+    console.log('hello', this.state);
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    this.setState({ mounted: true });
+
     const scripts = this.props.scripts;
     const stylesheets = this.props.stylesheets;
 
@@ -48,6 +51,12 @@ export default class ReactDependentScript extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.setState({
+      mounted: false
+    });
+  }
+
   render() {
     if (this.state.loadingCount === 0) {
       if (this.props.renderChildren) {
@@ -60,6 +69,7 @@ export default class ReactDependentScript extends Component {
   }
 
   _handleLoad = () => {
-    this.setState({ loadingCount: this.state.loadingCount - 1 });
+    console.log(this.state.mounted);
+    this.state.mounted && this.setState({ loadingCount: this.state.loadingCount - 1 });
   };
 }

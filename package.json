@@ -1,6 +1,6 @@
 {
   "name": "@zhuangya/react-dependent-script",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "react-dependent-script React component",
   "main": "lib/index.js",
   "module": "es/index.js",
